@@ -13,12 +13,16 @@ function RegistrationForm() {
     })
 
     const SaveInputs=(event)=>{
-        setFormdata({
-            ...formData,
-            [event.target.name]: event.target.value,
-            'checkboxStatus':event.target.checked
-            
-        })
+        const{type,name,value,checked} =event.target
+        if (type==='checkbox'){
+            setFormdata({
+                ...formData,[name]:checked
+            })
+        }else{
+            setFormdata({
+                ...formData,[name]:value
+            })
+        }
     }
 
     
@@ -28,10 +32,10 @@ function RegistrationForm() {
         if (Name.length<3){
             console.log('Name should contain at least 3 characters')
         }
-        else if(Age<18){
+        else if(parseInt(Age)<18){
             console.log('Age should be above 18')
         }
-        else if(password.length<6 | confirmPassword.length<6){
+        else if(password.length<6 || confirmPassword.length<6){
             console.log('minimum 6 characters Required')
         }
         else if (password!==confirmPassword){
@@ -79,9 +83,9 @@ function RegistrationForm() {
             <label htmlFor="confirmPassword">Confirm Password: </label>
             <input id="confirmPassword" type="password" onChange={SaveInputs} value={formData.confirmPassword} name="confirmPassword"/>
             <br />
-            <input id="terms" type="checkbox" onChange={SaveInputs} name="checKBoxStatus" checked={formData.checkboxStatus}/>
+            <input id="terms" type="checkbox" onChange={SaveInputs} name="checkboxStatus" checked={formData.checkboxStatus}/>
             <label htmlFor="terms">I Accept Terms & Conditions</label>
-            <button type="sumbit">Register</button>
+            <button type="submit" disabled={!formData.checkboxStatus}>Register</button>
         </form>
     )
 }
