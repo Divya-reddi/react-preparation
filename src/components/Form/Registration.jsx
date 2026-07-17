@@ -11,20 +11,12 @@ function RegistrationForm() {
         "confirmPassword": "",
         "checkboxStatus":false
     })
-    const [checkboxError,setCheckboxError]=useState()
-
-    const changeCheckbox=(event)=>{
-        if (event.target.checked){
-            setCheckboxError('')
-        }
-        setFormdata({...formData,'checkboxStatus':event.target.checked})
-        
-    }
 
     const SaveInputs=(event)=>{
         setFormdata({
             ...formData,
             [event.target.name]: event.target.value,
+            'checkboxStatus':event.target.checked
             
         })
     }
@@ -32,39 +24,63 @@ function RegistrationForm() {
     
     const submitForm = (event) => {
         event.preventDefault()
-        console.log(event.target.checked)
-        if (formData.checkboxStatus===false){
-            console.log('Please check the checkbox')
-            setCheckboxError('Please check the checkbox')
-        }else{
-            console.log('Registration Successful')
-            setCheckboxError('')
+        const {Name,Age,password,confirmPassword,checkboxStatus}=formData
+        if (Name.length<3){
+            console.log('Name should contain at least 3 characters')
+        }
+        else if(Age<18){
+            console.log('Age should be above 18')
+        }
+        else if(password.length<6 | confirmPassword.length<6){
+            console.log('minimum 6 characters Required')
+        }
+        else if (password!==confirmPassword){
+            console.log('Passwords do not match')
+        }
+        else if(!checkboxStatus){
+            console.log('Please accept Terms & Conditions')
+        }
+        else{
+            console.log(`Welcome ${formData.Name} 🎉`)
+            console.log(formData)
+            setFormdata({
+                "Name": "",
+                "Email": "",
+                "Age": "",
+                "course": "",
+                "password": "",
+                "confirmPassword": "",
+                "checkboxStatus": false
+            })
+
+
         }
     }
+
+
     return (
         <form onSubmit={submitForm}>
             <h3>Student Registration</h3>
             <label htmlFor="name">Name: </label>
-            <input id="name" type="text" onChange={SaveInputs}  name="Name" minLength={3} required/>
+            <input id="name" type="text" onChange={SaveInputs}  name="Name" value={formData.Name} required/>
             <br/>
             <label htmlFor="email">Email: </label>
-            <input id="email" type="email" onChange={SaveInputs}  name="Email" required/>
+            <input id="email" type="email" onChange={SaveInputs}  name="Email" value={formData.Email} required/>
             <br />
             <label htmlFor="age">Age: </label>
-            <input id="age" type="number" onChange={SaveInputs} name="Age" minLength={18}/>
+            <input id="age" type="number" onChange={SaveInputs} name="Age" value={formData.Age}/>
             <br />
             <label htmlFor="course">Course: </label>
-            <input id="course" type="text" onChange={SaveInputs} name="course" required/>
+            <input id="course" type="text" onChange={SaveInputs} name="course" value={formData.course} required/>
             <br />
             <label htmlFor="password">Password: </label>
-            <input id="password" type="password" onChange={SaveInputs} name="password" required minLength={6}/>
+            <input id="password" type="password" onChange={SaveInputs} name="password" value={formData.password} required/>
             <br />
             <label htmlFor="confirmPassword">Confirm Password: </label>
-            <input id="confirmPassword" type="password" onChange={SaveInputs} name="confirmPassword"/>
+            <input id="confirmPassword" type="password" onChange={SaveInputs} value={formData.confirmPassword} name="confirmPassword"/>
             <br />
-            <input id="terms" type="checkbox" onChange={changeCheckbox} name="checKBoxStatus" />
+            <input id="terms" type="checkbox" onChange={SaveInputs} name="checKBoxStatus" checked={formData.checkboxStatus}/>
             <label htmlFor="terms">I Accept Terms & Conditions</label>
-            {checkboxError===''?<br/>:<p style={{color:'red'}}>{checkboxError}</p>}
             <button type="sumbit">Register</button>
         </form>
     )
