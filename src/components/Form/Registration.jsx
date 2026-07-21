@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 function RegistrationForm() {
     const [formData, setFormdata] = useState({
@@ -9,8 +9,16 @@ function RegistrationForm() {
         "course": "",
         "password": "",
         "confirmPassword": "",
-        "checkboxStatus":false
+        "checkboxStatus":false,
+        "focus":false
     })
+
+    const inputRef = useRef()
+
+    useEffect(()=>{
+        inputRef.current.focus()
+    },[])
+
 
     const SaveInputs=(event)=>{
         const{type,name,value,checked} =event.target
@@ -66,7 +74,7 @@ function RegistrationForm() {
         <form onSubmit={submitForm}>
             <h3>Student Registration</h3>
             <label htmlFor="name">Name: </label>
-            <input id="name" type="text" onChange={SaveInputs}  name="Name" value={formData.Name} required/>
+            <input ref={inputRef} id="name" type="text" onChange={SaveInputs}  name="Name" value={formData.Name} required/>
             <br/>
             <label htmlFor="email">Email: </label>
             <input id="email" type="email" onChange={SaveInputs}  name="Email" value={formData.Email} required/>
